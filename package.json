@@ -1,0 +1,32 @@
+{
+  "name": "@adscore/nodejs-common",
+  "version": "0.1.0",
+  "description": "NodeJS client library for Adscore",
+  "scripts": {
+    "pack": "npm run generate-barrels && tsup && npm run copy-files && cd ./dist && npm pack",
+    "copy-files": "cp package.json ./dist/",
+    "generate-barrels": "barrelsby --delete --directory ./src --location all"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
+  "author": "Adscore",
+  "homepage": "https://adscore.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/libsodium-wrappers": "^0.7.14",
+    "@types/node": "^20.12.11",
+    "barrelsby": "^2.8.1",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "inet_xtoy": "^1.2.7"
+  },
+  "optionalDependencies": {
+    "@msgpack/msgpack": "^3.0.0-beta2",
+    "libsodium": "^0.7.13",
+    "libsodium-wrappers": "^0.7.13",
+    "php-serialize": "^4.1.1"
+  }
+}
