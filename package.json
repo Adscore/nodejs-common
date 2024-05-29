@@ -1,6 +1,6 @@
 {
   "name": "@adscore/nodejs-common",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "NodeJS client library for Adscore",
   "scripts": {
     "pack": "npm run generate-barrels && tsup && npm run copy-files && cd ./dist && npm pack",
@@ -12,6 +12,10 @@
   "author": "Adscore",
   "homepage": "https://adscore.com",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Adscore/nodejs-common.git"
+  },
   "devDependencies": {
     "@types/libsodium-wrappers": "^0.7.14",
     "@types/node": "^20.12.11",
