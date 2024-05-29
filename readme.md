@@ -24,7 +24,7 @@ Signature V4 is not yet supported, see [Client Libs Node](https://github.com/Ads
 8. `v5_0201J - OpenSSL GCM, JSON`
 9. `v5_0101J - sodium secretbox, JSON`
 
-### Currently supported Signature v5 algorithms
+### Currently not supported Signature v5 algorithms
 
 1. `v5_0101M - sodium secretbox, msgpack`
 2. `v5_0200M - OpenSSL CBC, msgpack`
