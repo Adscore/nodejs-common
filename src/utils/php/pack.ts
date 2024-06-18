@@ -28,12 +28,16 @@ function encode(input: number | bigint, code: string): Buffer {
   switch (code) {
     // signed char
     case "c":
-    // unsigned char
-    case "C":
       throwIfBigInt(input, "char");
       const c = Buffer.alloc(1);
       c.writeInt8(input);
       return c;
+    // unsigned char
+    case "C":
+      throwIfBigInt(input, "char");
+      const C = Buffer.alloc(1);
+      C.writeUInt8(input);
+      return C;
 
     // unsigned short (always 16 bit, big endian byte order)
     case "n":
@@ -41,6 +45,13 @@ function encode(input: number | bigint, code: string): Buffer {
       const n = Buffer.alloc(2);
       n.writeInt16BE(input);
       return n;
+
+    // 	unsigned long (always 32 bit, big endian byte order)
+    case "N":
+      throwIfBigInt(input, "short");
+      const N = Buffer.alloc(4);
+      N.writeUInt32BE(input);
+      return N;
 
     // unsigned long long (always 64 bit, big endian byte order)
     case "J":

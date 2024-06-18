@@ -14,7 +14,7 @@ export class Json extends AbstractStruct {
    * @return string
    */
   public pack(data: Buffer): string {
-    throw new Error("Not Implemented Yet");
+    throw new Error("Not supported");
   }
 
   /**
@@ -22,8 +22,8 @@ export class Json extends AbstractStruct {
    * @param string $data
    * @return mixed
    */
-  public unpack(data: string): string | object {
-    const structure = JSON.parse(super.unpack(data) as string);
+  public unpack(data: Buffer): string | object {
+    const structure = JSON.parse(super.unpack(data).toString());
     return structure;
   }
 }

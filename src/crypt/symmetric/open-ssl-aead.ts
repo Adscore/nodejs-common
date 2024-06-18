@@ -25,7 +25,7 @@ export class OpenSSLAEAD extends OpenSSL {
    */
   public decryptWithKey(
     payload: Buffer,
-    key: Buffer,
+    key: Buffer | string,
     aad: string = ""
   ): Buffer {
     const {

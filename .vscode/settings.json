@@ -6,6 +6,7 @@
         "Msgpack",
         "pton",
         "Secretbox",
+        "sprintf",
         "strcmp",
         "strpos",
         "unserialize"

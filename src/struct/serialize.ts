@@ -23,8 +23,8 @@ export class Serialize extends AbstractStruct {
   /**
    * Creates a value from a stored representation
    */
-  public unpack(data: string): string {
-    const structure = unserialize(super.unpack(data) as string, {
+  public unpack(data: Buffer): string {
+    const structure = unserialize(super.unpack(data).toString(), {
       allowed_classes: false,
     });
 

@@ -2,15 +2,11 @@
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This library provides various utilities for producing and parsing [Adscore](https://adscore.com) signatures,
+This library provides various utilities for parsing [Adscore](https://adscore.com) signatures,
 generating custom request payloads, and virtually anything that might be useful for customers doing server-side
 integration with the service.
 
 ## Compatibility
-
-### V4 signature decryption
-
-Signature V4 is not yet supported, see [Client Libs Node](https://github.com/Adscore/client-libs-node)
 
 ### Supported Signature v5 algorithms
 
@@ -23,15 +19,15 @@ Signature V4 is not yet supported, see [Client Libs Node](https://github.com/Ads
 7. `v5_0200J - OpenSSL CBC, JSON`
 8. `v5_0201J - OpenSSL GCM, JSON`
 9. `v5_0101J - sodium secretbox, JSON`
+10. `v5_0101M - sodium secretbox, msgpack`
+11. `v5_0200M - OpenSSL CBC, msgpack`
+12. `v5_0201M - OpenSSL GCM, msgpack`
 
-### Currently not supported Signature v5 algorithms
+### Not supported Signature v5 algorithms
 
-1. `v5_0101M - sodium secretbox, msgpack`
-2. `v5_0200M - OpenSSL CBC, msgpack`
-3. `v5_0201M - OpenSSL GCM, msgpack`
-4. `v5_0101I - sodium secretbox, igbinary`
-5. `v5_0200I - OpenSSL CBC, igbinary`
-6. `v5_0201I - OpenSSL GCM, igbinary`
+1. `v5_0101I - sodium secretbox, igbinary`
+2. `v5_0200I - OpenSSL CBC, igbinary`
+3. `v5_0201I - OpenSSL GCM, igbinary`
 
 ## Install
 
@@ -57,6 +53,65 @@ Use `npm i sodium` package for following algorithms:
 4. `v5_0101J - sodium secretbox, JSON`
 
 ## Usage
+
+### V4 signature decryption
+
+When zone's "Response signature algorithm" is set to "Hashing" or "Signing", it means that V4 signatures are in use.
+They provide basic means to check incoming traffic for being organic and valuable, but do not carry any additional
+information.
+
+```typescript
+import { Judge } from "@adscore/nodejs-common/definition";
+import { ParseError } from "@adscore/nodejs-common/errors";
+import {
+  Signature4,
+  VerifyError,
+  VersionError,
+} from "@adscore/nodejs-common/signature";
+
+/*  Replace <key> with "Zone Response Key" which you might find in "Zone Encryption" page for given zone.
+    Those keys are base64-encoded and the library expects raw binary, so we need to decode it now. */
+const cryptKey = Buffer.from("<key>", "base64");
+
+/*  Three things are necessary to verify the signature - at least one IP address, User Agent string
+        and the signature itself. */
+const signature = request.body.signature; /* for example */
+const userAgent = request.get("User-Agent") ?? "";
+/*  You might want to use X-Forwarded-For or other IP-forwarding headers coming from for example load
+        balancing services, but make sure you trust them and they are not vulnerable to user modification! */
+const ipAddresses = [request.socket.remoteAddress];
+
+try {
+  const parser = Signature4.createFromRequest(
+    signature,
+    ipAddresses,
+    userAgent,
+    cryptKey
+  );
+
+  /*  Result contains numerical result value */
+  const result = parser.getResult();
+  /*  Judge is the module evaluating final result in the form of single score. RESULTS constant
+            contains array with human-readable descriptions of every numerical result, if needed. */
+  const humanReadable = Judge.RESULTS[result];
+  console.log(humanReadable["verdict"] + " (" + humanReadable["name"] + ")");
+} catch (e: unknown) {
+  if (e instanceof VersionError) {
+    /*  It means that the signature is not the V4 one, check your zone settings and ensure the signatures
+            are coming from the chosen zone. */
+  }
+
+  if (e instanceof ParseError) {
+    /*  It means that the signature metadata is malformed and cannot be parsed, or contains invalid data,
+            check for corruption underway. */
+  }
+
+  if (e instanceof VerifyError) {
+    /*  Signature could not be verified - usually this is a matter of IP / user agent mismatch (or spoofing).
+            They must be bit-exact, so even excessive whitespace or casing change can trigger the problem. */
+  }
+}
+```
 
 ### V5 signature decryption
 

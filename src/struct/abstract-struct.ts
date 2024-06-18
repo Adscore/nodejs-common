@@ -1,6 +1,6 @@
 import { strlen } from "../utils/php/strlen";
 import { strpos } from "../utils/php/strpos";
-import { substr } from "../utils/php/substr";
+import { substr, substrBuffer } from "../utils/php/substr";
 
 /**
  * Common base for serialization/deserialization methods
@@ -15,7 +15,7 @@ export abstract class AbstractStruct {
    * @return string
    */
   public pack(data: string | Buffer): string | Buffer {
-    throw new Error('Not implemented yet');
+    throw new Error('Not supported');
   }
 
   /**
@@ -23,11 +23,11 @@ export abstract class AbstractStruct {
    * @param string $data
    * @return mixed
    */
-  public unpack(data: string): string | object {
-    if (strpos(data, this.TYPE) !== 0) {
+  public unpack(data: Buffer): string | object {
+    if (strpos(data.toString(), this.TYPE) !== 0) {
       throw new Error("Unexpected serializer type");
     }
 
-    return substr(data, strlen(this.TYPE));
+    return substrBuffer(data, strlen(this.TYPE));
   }
 }

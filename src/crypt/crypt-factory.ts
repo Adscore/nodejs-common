@@ -1,4 +1,5 @@
 import { InvalidArgumentError } from "../errors/invalid-argument-error";
+import { substrBuffer } from "../utils/php";
 import { pack } from "../utils/php/pack";
 import { OpenSSL } from "./symmetric/open-ssl";
 import { OpenSSLAEAD } from "./symmetric/open-ssl-aead";
@@ -13,20 +14,19 @@ export class CryptFactory {
    * @return OpenSSL|Secretbox
    */
   public static create(name: CryptType | string | Buffer) {
-
     switch (name.toString()) {
       case pack("v", OpenSSL.METHOD).toString():
       case "OpenSSL":
       case "openssl":
         return new OpenSSL();
-      case pack('v', OpenSSLAEAD.METHOD).toString():
-      case 'OpenSSLAEAD':
-      case 'opensslaead':
-          return new OpenSSLAEAD();
-      case pack('v', Secretbox.METHOD).toString():
-      case 'Secretbox':
-      case 'secretbox':
-          return new Secretbox();
+      case pack("v", OpenSSLAEAD.METHOD).toString():
+      case "OpenSSLAEAD":
+      case "opensslaead":
+        return new OpenSSLAEAD();
+      case pack("v", Secretbox.METHOD).toString():
+      case "Secretbox":
+      case "secretbox":
+        return new Secretbox();
       default:
         throw new InvalidArgumentError("Unsupported crypt class");
     }
@@ -38,7 +38,7 @@ export class CryptFactory {
    * @return OpenSSL|Secretbox
    */
   public static createFromPayload(payload: Buffer) {
-    const header = payload.subarray(0, 2);
+    const header = substrBuffer(payload, 0, 2);
     return CryptFactory.create(header);
   }
 

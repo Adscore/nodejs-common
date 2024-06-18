@@ -2,7 +2,7 @@ import { InvalidArgumentError } from "../errors/invalid-argument-error";
 import { substr } from "../utils/php/substr";
 import { AbstractStruct } from "./abstract-struct";
 import { Json, JsonType } from "./json";
-import { MsgpackType } from "./msgpack";
+import { Msgpack, MsgpackType } from "./msgpack";
 import { Rfc3986, Rfc3986Type } from "./rfc3986";
 import { Serialize, SerializeType } from "./serialize";
 
@@ -29,7 +29,7 @@ export class StructFactory {
       case MsgpackType:
       case "Msgpack":
       case "msgpack":
-        throw new Error("Not implemented yet");
+        return new Msgpack();
 
       case JsonType:
       case "Json":
