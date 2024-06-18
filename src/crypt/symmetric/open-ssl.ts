@@ -73,10 +73,10 @@ export class OpenSSL extends AbstractSymmetricCrypt {
   }
 
   public encryptWithKey(data: string, key: Buffer): string {
-    throw new Error("Not implemented yet");
+    throw new Error("Not supported");
   }
 
-  public decryptWithKey(payload: Buffer, key: Buffer): Buffer {
+  public decryptWithKey(payload: Buffer, key: Buffer | string): Buffer {
     const { method, iv, data } = this.parse(payload, {
       iv: this.ivLengths[this.method],
     });
@@ -90,7 +90,7 @@ export class OpenSSL extends AbstractSymmetricCrypt {
   protected decode(
     input: Buffer,
     method: string,
-    key: Buffer,
+    key: Buffer | string,
     iv: Buffer,
     tag?: Buffer
   ) {

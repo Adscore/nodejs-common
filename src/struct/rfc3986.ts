@@ -1,6 +1,6 @@
 import { AbstractStruct } from "./abstract-struct";
 
-export const Rfc3986Type = 'H';
+export const Rfc3986Type = "H";
 
 /**
  * RFC 3986 serialization adapter
@@ -14,7 +14,7 @@ export class Rfc3986 extends AbstractStruct {
    * @return string
    */
   public pack(data: string): string {
-    throw new Error('Not implemented yet');
+    throw new Error("Not supported");
   }
 
   /**
@@ -22,8 +22,8 @@ export class Rfc3986 extends AbstractStruct {
    * @param string $data
    * @return array
    */
-  public unpack(data: string): object {
-    const searchParams = new URLSearchParams(data);
+  public unpack(data: Buffer): string {
+    const searchParams = new URLSearchParams(data.toString());
 
     const res = Array.from(searchParams.entries()).reduce((curr, prev) => {
       curr[prev[0]] = prev[1];

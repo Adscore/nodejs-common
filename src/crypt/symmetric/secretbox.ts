@@ -2,6 +2,7 @@ import { AbstractSymmetricCrypt } from "./abstract-symmetric-crypt";
 import _sodium from "libsodium-wrappers";
 import { strlen } from "../../utils/php/strlen";
 import { DecryptError } from "../errors";
+import { substrBuffer } from "../../utils/php";
 
 const sodium = _sodium;
 
@@ -33,7 +34,7 @@ export class Secretbox extends AbstractSymmetricCrypt {
       sodium.crypto_pwhash(
         sodium.crypto_secretbox_KEYBYTES,
         password,
-        Buffer.from(salt).subarray(0, sodium.crypto_pwhash_SALTBYTES),
+        substrBuffer(Buffer.from(salt), 0, sodium.crypto_pwhash_SALTBYTES),
         sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
         sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
         sodium.crypto_pwhash_ALG_DEFAULT
@@ -49,7 +50,7 @@ export class Secretbox extends AbstractSymmetricCrypt {
    * @throws InternalError
    */
   public encryptWithKey(data: string, key: Buffer): string {
-    throw new Error("Not implemented yet");
+    throw new Error("Not supported");
   }
 
   /**
@@ -60,7 +61,7 @@ export class Secretbox extends AbstractSymmetricCrypt {
    * @throws DecryptError
    * @throws InternalError
    */
-  public decryptWithKey(payload: Buffer, key: Buffer): Buffer {
+  public decryptWithKey(payload: Buffer, key: Buffer | string): Buffer {
     const {
       method: method,
       iv: iv,
@@ -78,7 +79,7 @@ export class Secretbox extends AbstractSymmetricCrypt {
     const decryptedData = sodium.crypto_secretbox_open_easy(
       new Uint8Array(data),
       iv,
-      key
+      Buffer.from(key)
     );
 
     return Buffer.from(decryptedData);

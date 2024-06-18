@@ -3,5 +3,6 @@
  */
 
 export * from "./abstract-signature";
+export * from "./signature4";
 export * from "./signature5";
 export * from "./error/index";

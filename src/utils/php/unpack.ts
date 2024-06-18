@@ -14,7 +14,7 @@ export function unpack(
   for (const instruction of instructions) {
     const { code, name } = getCodeAndName(instruction);
 
-    const { bytesOffset, result: decodedData } = decode(
+    const { bytesOffset, decodedData } = decode(
       input,
       code,
       currentBytesOffset
@@ -32,7 +32,7 @@ function decode(
   input: Buffer,
   code: string,
   offset: number
-): { result: number | bigint; bytesOffset: number } {
+): { decodedData: number | bigint; bytesOffset: number } {
   if (offset > input.length) {
     throw new Error(
       `Buffer overflow. Current: ${input.length}, requested: ${offset}`
@@ -42,32 +42,44 @@ function decode(
   switch (code) {
     // signed char
     case "c":
+      return {
+        bytesOffset: 1,
+        decodedData: input.readInt8(offset),
+      };
+
     // unsigned char
     case "C":
       return {
         bytesOffset: 1,
-        result: input.readInt8(offset),
+        decodedData: input.readUInt8(offset),
       };
 
     // unsigned short (always 16 bit, big endian byte order)
     case "n":
       return {
         bytesOffset: 2,
-        result: input.readInt16BE(offset),
+        decodedData: input.readInt16BE(offset),
+      };
+
+    // 	unsigned long (always 32 bit, big endian byte order)
+    case "N":
+      return {
+        bytesOffset: 4,
+        decodedData: input.readUInt32BE(offset),
       };
 
     // unsigned long long (always 64 bit, big endian byte order)
     case "J":
       return {
         bytesOffset: 8,
-        result: input.readBigUint64BE(offset),
+        decodedData: input.readBigUint64BE(offset),
       };
 
     // 	unsigned short (always 16 bit, little endian byte order)
     case "v":
       return {
         bytesOffset: 2,
-        result: input.readInt16LE(offset),
+        decodedData: input.readInt16LE(offset),
       };
   }
 

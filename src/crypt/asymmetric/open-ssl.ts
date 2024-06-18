@@ -1,6 +1,7 @@
 import { InvalidArgumentError } from "../../errors/invalid-argument-error";
 import { VerifyError } from "../../signature/error/verify-error";
 import { base64Decode } from "../../utils/php/base64";
+import { KeyError } from "../errors";
 import { AbstractAsymmetricCrypt } from "./abstract-asymmetric-crypt";
 import * as crypto from "node:crypto";
 
@@ -24,7 +25,7 @@ export class AsymmetricOpenSSL extends AbstractAsymmetricCrypt {
    * @return boolean
    * @throws VerifyError
    */
-  public verify(data: string, signature: string, publicKey: string): boolean {
+  public verify(data: string, signature: string, publicKey: Buffer | string): boolean {
     if (
       crypto.verify(
         this.algo,
@@ -57,7 +58,25 @@ export class AsymmetricOpenSSL extends AbstractAsymmetricCrypt {
    * @return Compacted private key
    */
   public static createEcPrivateKey(curveName: string = "prime256v1"): Buffer {
-    throw new InvalidArgumentError("Not implemented yet");
+    if (!crypto.getCurves().includes(curveName)) {
+      throw new InvalidArgumentError(
+        'Unsupported curve type "' + curveName + '"'
+      );
+    }
+
+    try {
+      const { privateKey } = crypto.generateKeyPairSync("ec", {
+        namedCurve: curveName,
+      });
+
+      const data = privateKey
+        .export({ type: "pkcs8", format: "pem" })
+        .toString();
+
+      return this.compactPem(data);
+    } catch (e) {
+      throw new KeyError("Cannot create EC private key", e);
+    }
   }
 
   /**
@@ -66,6 +85,6 @@ export class AsymmetricOpenSSL extends AbstractAsymmetricCrypt {
    * @return Public key in PEM format
    */
   public static getPublicKeyPem(data: string): string {
-    throw new Error("Not implemented yet");
+    throw new Error("Not supported");
   }
 }

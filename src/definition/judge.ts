@@ -13,8 +13,4 @@ export class Judge {
     [Judge.PROXY]: { verdict: "proxy", name: "Proxy" },
     [Judge.BOT]: { verdict: "bot", name: "Bot" },
   };
-
-  public static getResultMap(): string[] {
-    throw new Error("Not implemented yet");
-  }
 }

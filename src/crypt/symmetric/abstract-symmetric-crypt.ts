@@ -1,3 +1,4 @@
+import { substrBuffer } from "../../utils/php";
 import { arraySum } from "../../utils/php/array-sum";
 import { unpack } from "../../utils/php/unpack";
 import { CryptParseError } from "../errors";
@@ -38,17 +39,14 @@ export abstract class AbstractSymmetricCrypt {
     }
     let pos = AbstractSymmetricCrypt.METHOD_SIZE;
 
-    const result = unpack(
-      "vmethod",
-      payload.subarray(0, pos)
-    );
+    const result = unpack("vmethod", substrBuffer(payload, 0, pos));
 
     for (const [key, length] of Object.entries(lengths)) {
-      result[key] = payload.subarray(pos, pos + length);
+      result[key] = substrBuffer(payload, pos, length);
       pos += length;
     }
 
-    result["data"] = payload.subarray(pos);
+    result["data"] = substrBuffer(payload, pos);
 
     return result;
   }

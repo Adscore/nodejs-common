@@ -14,10 +14,8 @@ export class Msgpack extends AbstractStruct {
     return super.pack(Buffer.from(payload));
   }
 
-  public unpack(data: string): string | object {
-    const structure = decode(
-      Buffer.from(super.unpack(data) as string)
-    ) as object;
+  public unpack(data: Buffer): string | object {
+    const structure = decode(super.unpack(data) as Buffer) as object;
 
     return structure;
   }

@@ -13,8 +13,9 @@ import { StructFactory } from "../struct/struct.factory";
 import { inet_pton } from "inet_xtoy";
 import { VerifyError } from "./error/verify-error";
 import { SignatureParseError } from "./error/parse-error";
+import { substrBuffer } from "../utils/php";
 
-export type CryptKeyCallback = (zoneId: number | bigint) => Buffer;
+export type CryptKeyCallback = (zoneId: number | bigint) => Buffer | string;
 
 /**
  * Signature v5 envelope/parser
@@ -148,7 +149,7 @@ export class Signature5 extends AbstractSignature {
     cryptKey: Buffer,
     formatter: AbstractFormatter | null = null
   ): string {
-    throw new Error("Not implemented yet");
+    throw new Error("Not supported");
   }
 
   /**
@@ -159,7 +160,7 @@ export class Signature5 extends AbstractSignature {
    */
   public parse(
     signature: string,
-    onCryptKeyRequest: (zoneId: bigint | number) => Buffer,
+    onCryptKeyRequest: (zoneId: bigint | number) => Buffer | string,
     formatter: AbstractFormatter | null = null
   ): void {
     formatter ??= this.getDefaultFormatter();
@@ -176,9 +177,10 @@ export class Signature5 extends AbstractSignature {
       throw new SignatureParseError("Invalid signature version");
     }
 
-    const encryptedPayload = payload.subarray(
+    const encryptedPayload = substrBuffer(
+      payload,
       this.HEADER_LENGTH,
-      Number(length) + this.HEADER_LENGTH
+      Number(length)
     );
 
     if (encryptedPayload.length < Number(length)) {
@@ -199,16 +201,18 @@ export class Signature5 extends AbstractSignature {
    * @param string key
    * @return array
    */
-  protected decryptPayload(payload: Buffer, key: Buffer): object {
+  protected decryptPayload(payload: Buffer, key: Buffer | string): object {
     const crypt = CryptFactory.createFromPayload(payload);
     const decryptedPayload = crypt.decryptWithKey(payload, key);
 
     const struct = StructFactory.createFromPayload(decryptedPayload.toString());
 
-    const unpackedPayload = struct.unpack(decryptedPayload.toString());
+    const unpackedPayload = struct.unpack(decryptedPayload);
 
     if (typeof unpackedPayload !== "object") {
-      throw new SignatureParseError("Unexpected payload type " + typeof unpackedPayload);
+      throw new SignatureParseError(
+        "Unexpected payload type " + typeof unpackedPayload
+      );
     }
 
     this.structType = struct.constructor.name;

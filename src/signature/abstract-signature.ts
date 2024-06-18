@@ -1,5 +1,6 @@
 import { AbstractFormatter } from "../formatter/abstract-formatter";
 import { Base64 } from "../formatter/base64";
+import { substrBuffer } from "../utils/php";
 import { VerifyError } from "./error/verify-error";
 import { CryptKeyCallback } from "./signature5";
 
@@ -12,11 +13,8 @@ export abstract class AbstractSignature {
   protected payload: Payload | null = null;
   protected result: number | null = null;
 
-  /**
-   * TODO: used in unit testing, will be changed to `jest.spy`
-   */
-  public structType?: string;
-  public encryptionType?: string;
+  protected structType?: string;
+  protected encryptionType?: string;
 
   /**
    * Retrieve embedded payload
@@ -58,7 +56,7 @@ export abstract class AbstractSignature {
     signature: string,
     ipAddresses: Array<string>,
     userAgent: string,
-    cryptKey: Buffer | CryptKeyCallback,
+    cryptKey: Buffer | CryptKeyCallback | string,
     formatter: AbstractFormatter | null = null
   ): AbstractSignature {
     throw new Error("Not implemented");
@@ -84,7 +82,7 @@ export abstract class AbstractSignature {
     if (known.length < n || user.length < n) {
       return false;
     }
-    return this.hashEquals(known.subarray(0, n), user.subarray(0, n));
+    return this.hashEquals(substrBuffer(known, 0, n), substrBuffer(user, 0, n));
   }
 
   private hashEquals(known: Buffer, user: Buffer): boolean {
