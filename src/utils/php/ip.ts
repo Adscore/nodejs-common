@@ -23,6 +23,3 @@ export function long2ip(longValue: number): string {
     })
     .join(".");
 }
-
-exports.ip2long = ip2long;
-exports.long2ip = long2ip;
