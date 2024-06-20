@@ -1,9 +1,9 @@
 {
   "name": "@adscore/nodejs-common",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NodeJS client library for Adscore",
   "scripts": {
-    "pack": "npm run generate-barrels && tsup && npm run copy-files && cd ./dist && npm pack",
+    "pack": "rm -r ./dist && npm run generate-barrels && tsup && npm run copy-files && cd ./dist && npm pack",
     "publish": "cd ./dist && npm publish --access public",
     "copy-files": "cp package.json ./dist/ && cp readme.md ./dist/",
     "generate-barrels": "barrelsby --delete --directory ./src --location all",

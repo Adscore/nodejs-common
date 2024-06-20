@@ -31,6 +31,8 @@ integration with the service.
 
 ## Install
 
+Nodejs version >= 14.18.0 is required
+
 Via NPM
 
 ```bash
@@ -120,8 +122,7 @@ address nor User Agent string, so it is immune for environment changes usually p
 Judge result is also included in the payload, but client doing the integration can make its own decision basing on
 the metadata accompanying.
 
-Zone has to be set explicitly to V5 signature, if you don't see the option, please contact support as we are rolling
-this mode on customer's demand. The format supports a wide variety of encryption and serialization methods, some
+The format supports a wide variety of encryption and serialization methods, some
 of them are included in this repository, but it can be extended to fulfill specific needs.
 
 It can be integrated in V4-compatible mode, not making use of any V5 features (see V4 verification):
