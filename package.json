@@ -1,14 +1,16 @@
 {
   "name": "@adscore/nodejs-common",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "NodeJS client library for Adscore",
   "scripts": {
-    "prepare-package": "rm -r -f ./dist && npm run generate-barrels && tsup && npm run copy-files",
-    "publish-package": "cd ./dist && npm publish --access public",
-    "copy-files": "cp package.json ./dist/ && cp readme.md ./dist/",
+    "prepare-package": "rm -r -f ./dist && npm run generate-barrels && tsc && npm run copy-files",
+    "publish-package": "rm -r -f ./dist/*.tgz && cd ./dist && npm publish --access public",
+    "create-test-package": "npm run prepare-package && cd ./dist && npm pack",
+    "copy-files": "cp package.json ./dist/ && cp readme.md ./dist/ && mv ./dist/src/* ./dist/",
     "generate-barrels": "barrelsby --delete --directory ./src --location all",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "tsc": "tsc"
   },
   "main": "index.js",
   "types": "index.d.ts",
@@ -27,7 +29,6 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
-    "tsup": "^8.0.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
