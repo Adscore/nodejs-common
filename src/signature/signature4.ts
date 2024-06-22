@@ -11,7 +11,7 @@ import { sprintf } from "../utils/php/sprintf";
 import { AdscoreError } from "../errors/adscore-error";
 import { empty } from "../utils/php/empty";
 import { hashEquals } from "../utils/php/hash-equals";
-import { inet_ntop, inet_pton } from "inet_xtoy";
+import { inet_ntop, inet_pton } from "locutus/php/network";
 import { ip2long, long2ip } from "../utils/php/ip";
 
 /**
@@ -173,7 +173,7 @@ export class Signature4 extends AbstractSignature {
         ipAddress = long2ip(longIp);
         token = this.payload?.[signRole + "Token"];
       } else {
-        ipAddress = inet_ntop(inet_pton(ipAddress) as Buffer);
+        ipAddress = inet_ntop(inet_pton(ipAddress));
         token = this.payload?.[signRole + "Token6"] ?? null;
         v = 6;
         if (token === null) {

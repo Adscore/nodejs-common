@@ -10,7 +10,7 @@ import { unpack } from "../utils/php/unpack";
 import { AbstractSignature, Payload } from "./abstract-signature";
 import { CryptFactory } from "../crypt/crypt-factory";
 import { StructFactory } from "../struct/struct.factory";
-import { inet_pton } from "inet_xtoy";
+import { inet_pton } from "locutus/php/network";
 import { VerifyError } from "./error/verify-error";
 import { SignatureParseError } from "./error/parse-error";
 import { substrBuffer } from "../utils/php";
@@ -95,21 +95,22 @@ export class Signature5 extends AbstractSignature {
   public verify(ipAddresses: Array<string>, userAgent: string): boolean {
     let matchingIp = null;
     for (const ipAddress of ipAddresses) {
-      const nIpAddress = inet_pton(ipAddress);
+      const nIpAddress = Buffer.from(inet_pton(ipAddress));
+      
 
       if (
         // ip v4
         (isset(this.payload?.["ipv4.ip"]) &&
           this.bytesCompare(
             nIpAddress,
-            inet_pton(this.payload?.["ipv4.ip"]),
+            Buffer.from(inet_pton(this.payload?.["ipv4.ip"])),
             this.payload?.["ipv4.v"] ?? 4
           )) ||
         // ip v6
         (isset(this.payload?.["ipv6.ip"]) &&
           this.bytesCompare(
             nIpAddress,
-            inet_pton(this.payload?.["ipv6.ip"]),
+            Buffer.from(inet_pton(this.payload?.["ipv6.ip"])),
             this.payload?.["ipv6.v"] ?? 16
           ))
       ) {
