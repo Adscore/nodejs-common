@@ -25,9 +25,13 @@ export class AsymmetricOpenSSL extends AbstractAsymmetricCrypt {
    * @return boolean
    * @throws VerifyError
    */
-  public verify(data: string, signature: string, publicKey: Buffer | string): boolean {
+  public verify(
+    data: string,
+    signature: string,
+    publicKey: Buffer | string
+  ): boolean {
     if (
-      crypto.verify(
+      !crypto.verify(
         this.algo,
         base64Decode(data),
         publicKey,
@@ -47,9 +51,7 @@ export class AsymmetricOpenSSL extends AbstractAsymmetricCrypt {
    * @return string Computed signature
    */
   public sign(data: string, privateKey: string): Buffer {
-    const privateKeyPem = AbstractAsymmetricCrypt.expandPem(privateKey);
-
-    return crypto.sign(this.algo, base64Decode(data), privateKeyPem);
+    throw new Error("Not supported");
   }
 
   /**
@@ -58,25 +60,7 @@ export class AsymmetricOpenSSL extends AbstractAsymmetricCrypt {
    * @return Compacted private key
    */
   public static createEcPrivateKey(curveName: string = "prime256v1"): Buffer {
-    if (!crypto.getCurves().includes(curveName)) {
-      throw new InvalidArgumentError(
-        'Unsupported curve type "' + curveName + '"'
-      );
-    }
-
-    try {
-      const { privateKey } = crypto.generateKeyPairSync("ec", {
-        namedCurve: curveName,
-      });
-
-      const data = privateKey
-        .export({ type: "pkcs8", format: "pem" })
-        .toString();
-
-      return this.compactPem(data);
-    } catch (e) {
-      throw new KeyError("Cannot create EC private key", e);
-    }
+    throw new Error("Not supported");
   }
 
   /**

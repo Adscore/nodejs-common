@@ -61,15 +61,8 @@ export class Signature4 extends AbstractSignature {
     this.payload = payload;
   }
 
-  // TODO: fix/remove params types in separate commit
   /**
    * Simplified signature parsing/validation
-   * @param string signature
-   * @param array ipAddresses
-   * @param string userAgent
-   * @param string cryptKey
-   * @param AbstractFormatter|null formatter
-   * @return self
    */
   public static createFromRequest(
     signature: string,
