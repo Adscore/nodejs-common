@@ -25,19 +25,21 @@ export class AsymmetricOpenSSL extends AbstractAsymmetricCrypt {
    * @return boolean
    * @throws VerifyError
    */
-  public verify(data: string, signature: string, publicKey: Buffer | string): boolean {
-    if (
-      crypto.verify(
-        this.algo,
-        base64Decode(data),
-        publicKey,
-        base64Decode(signature)
-      )
-    ) {
-      throw new VerifyError("Signature verification error");
-    }
+  public verify(
+    data: string,
+    signature: string,
+    publicKey: Buffer | string
+  ): boolean {
+    const encoder = new TextEncoder();
 
-    return true;
+    const isValid = crypto.verify(
+      this.algo,
+      encoder.encode(data),
+      publicKey,
+      base64Decode(signature)
+    );
+
+    return isValid;
   }
 
   /**
