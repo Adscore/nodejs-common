@@ -23,7 +23,7 @@ export class Rfc3986 extends AbstractStruct {
    * @return array
    */
   public unpack(data: Buffer): string {
-    const searchParams = new URLSearchParams(data.toString());
+    const searchParams = new URLSearchParams(super.unpack(data).toString());
 
     const res = Array.from(searchParams.entries()).reduce((curr, prev) => {
       curr[prev[0]] = prev[1];
