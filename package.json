@@ -1,6 +1,6 @@
 {
   "name": "@adscore/nodejs-common",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "NodeJS client library for Adscore",
   "scripts": {
     "prepare-package": "rm -r -f ./dist && npm run generate-barrels && tsc && npm run copy-files",
@@ -39,6 +39,6 @@
     "php-serialize": "^4.1.1"
   },
   "dependencies": {
-    "locutus": "^2.0.32"
+    "locutus": "^3.0.4"
   }
 }
