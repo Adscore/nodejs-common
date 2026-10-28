@@ -16,17 +16,18 @@ integration with the service.
 
 These algorithms are deprecated, but remain supported for backward compatibility:
 
-1. `v5_0200H - OpenSSL CBC, HTTP query`
-2. `v5_0200S - OpenSSL CBC, PHP serialize`
-3. `v5_0201H - OpenSSL GCM, HTTP query`
-4. `v5_0201S - OpenSSL GCM, PHP serialize`
-5. `v5_0101H - sodium secretbox, HTTP query`
-6. `v5_0101S - sodium secretbox, PHP serialize`
-7. `v5_0200J - OpenSSL CBC, JSON`
-8. `v5_0201J - OpenSSL GCM, JSON`
-9. `v5_0101J - sodium secretbox, JSON`
-10. `v5_0200M - OpenSSL CBC, msgpack`
-11. `v5_0201M - OpenSSL GCM, msgpack`
+1. `Signature v4 (Hashing, Signing)`
+2. `v5_0200H - OpenSSL CBC, HTTP query`
+3. `v5_0200S - OpenSSL CBC, PHP serialize`
+4. `v5_0201H - OpenSSL GCM, HTTP query`
+5. `v5_0201S - OpenSSL GCM, PHP serialize`
+6. `v5_0101H - sodium secretbox, HTTP query`
+7. `v5_0101S - sodium secretbox, PHP serialize`
+8. `v5_0200J - OpenSSL CBC, JSON`
+9. `v5_0201J - OpenSSL GCM, JSON`
+10. `v5_0101J - sodium secretbox, JSON`
+11. `v5_0200M - OpenSSL CBC, msgpack`
+12. `v5_0201M - OpenSSL GCM, msgpack`
 
 ### Not supported Signature v5 algorithms
 
